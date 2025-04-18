@@ -1,4 +1,5 @@
-#from scipy import optimize
+from scipy.optimize import linprog
+import numpy as np
 from collections.abc import Iterator
 from itertools import product
 
@@ -15,10 +16,11 @@ def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
         if waste >= 0 and waste <= smallest_final:
             yield dict(zipped)
 
-def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> dict[dict[int,int],int]:
+def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[dict[int,int],int]]:
     finals = final_demands.keys()
     possible_patterns = list(patterns(finals, raw_length))
-    # TODO: Optimize!
+
+    raise NotImplementedError # TODO: Optimize using `linprog`
 
 if __name__ == "__main__":
     import argparse
@@ -36,5 +38,4 @@ if __name__ == "__main__":
     
     print(f"Specified raw length: {raw_length}")
     print(f"Specified final demands: {final_demands}")
-
-    cutting_stock(raw_length, final_demands)
+    print(f"Result: {cutting_stock(raw_length, final_demands)}")
