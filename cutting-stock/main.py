@@ -43,6 +43,8 @@ if __name__ == "__main__":
 
     print("Result")
     print("------")
+    print(f"Raws used: {sum(count for _,count in result)}\n")
+
     for pattern,count in result:
         # We don't show unused patterns
         if count == 0:
