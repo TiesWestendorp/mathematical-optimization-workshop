@@ -1,8 +1,6 @@
-from scipy import optimizefrom collections.abc import Iterator
+#from scipy import optimize
+from collections.abc import Iterator
 from itertools import product
-
-if __name__ == "__main__":
-    main()
 
 def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
     smallest_final = min(finals)
@@ -17,9 +15,26 @@ def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
         if waste >= 0 and waste <= smallest_final:
             yield dict(zipped)
 
-# TODO: allow input arguments
-def main() -> None:
-    raw_length = # TODO: read from file
-    final_demands = # TODO: read from file
+def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> dict[dict[int,int],int]:
+    finals = final_demands.keys()
     possible_patterns = list(patterns(finals, raw_length))
     # TODO: Optimize!
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Cutting stock problem solver")
+    parser.add_argument("--file", required=True, help="CSV input file")
+    file_name = parser.parse_args().file
+ 
+    raw_length = None
+    final_demands = None
+    with open(file_name, "r") as file:
+        lines = file.readlines()
+        raw_length = int(lines[0])
+        final_demands = dict(map(lambda line: map(int, line.split(",")), lines[1:]))
+    
+    print(f"Specified raw length: {raw_length}")
+    print(f"Specified final demands: {final_demands}")
+
+    cutting_stock(raw_length, final_demands)
