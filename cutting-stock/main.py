@@ -53,12 +53,12 @@ if __name__ == "__main__":
         pattern_without_zero_entries = {final: amount for final,amount in pattern.items() if amount>0}
         print(f"{count} times:\t{pattern_without_zero_entries}")
     
-    waste = sum(map(lambda x: x[1] * (100 - sum(f*a for f,a in x[0].items())), result))
+    waste = sum(count * (100 - sum(final*amount for final,amount in pattern.items())) for pattern,count in result)
     print(f"\nTotal produced waste: {waste}\n")
 
     for final in final_demands:
         # We don't show finals that aren't overproduced
-        produced = sum(count*pattern[final] for pattern,count in result)
+        produced = sum(count * pattern[final] for pattern,count in result)
         overproduced_amount = produced-final_demands[final]
         if overproduced_amount <= 0:
             continue
