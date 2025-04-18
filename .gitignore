@@ -3,3 +3,6 @@ __pycache__/*
 
 # Ignore solution files
 **/solution*
+
+# Ignore DS_Store
+.DS_Store
