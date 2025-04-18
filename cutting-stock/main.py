@@ -37,5 +37,28 @@ if __name__ == "__main__":
         final_demands = dict(map(lambda line: map(int, line.split(",")), lines[1:]))
     
     print(f"Specified raw length: {raw_length}")
-    print(f"Specified final demands: {final_demands}")
-    print(f"Result: {cutting_stock(raw_length, final_demands)}")
+    print(f"Specified final demands: {final_demands}\n")
+    
+    result = cutting_stock(raw_length, final_demands)
+
+    print("Result")
+    print("------")
+    for pattern,count in result:
+        # We don't show unused patterns
+        if count == 0:
+            continue
+        
+        pattern_without_zero_entries = {final: amount for final,amount in pattern.items() if amount>0}
+        print(f"{count} times:\t{pattern_without_zero_entries}")
+    
+    waste = sum(map(lambda x: x[1] * (100 - sum(f*a for f,a in x[0].items())), result))
+    print(f"\nTotal produced waste: {waste}\n")
+
+    for final in final_demands:
+        # We don't show finals that aren't overproduced
+        produced = sum(count*pattern[final] for pattern,count in result)
+        overproduced_amount = produced-final_demands[final]
+        if overproduced_amount <= 0:
+            continue
+        
+        print(f"Overproduction of finals of length {final}:\t{overproduced_amount}")
