@@ -5,11 +5,11 @@ from itertools import product
 
 def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
     smallest_final = min(finals)
-    maximum_in_raw_per_final = map(lambda final: range(raw_length//final + 1), finals)
+    maximum_in_raw_per_final = [range(raw_length//final + 1) for final in finals]
 
     for pattern in product(*maximum_in_raw_per_final):
         zipped = list(zip(finals, pattern)) # zip-objects are iterators, but we want to iterate it twice, so we transform it into a list here
-        pattern_length = sum(map(lambda x: x[0] * x[1], zipped))
+        pattern_length = sum(final * amount for final, amount in zipped)
         waste = raw_length - pattern_length
 
         # The pattern must not exceed the raw_length, and no final must be cuttable from the waste
@@ -43,22 +43,22 @@ if __name__ == "__main__":
 
     print("Result")
     print("------")
-    print(f"Raws used: {sum(count for _,count in result)}\n")
+    print(f"Raws used: {sum(count for _, count in result)}\n")
 
     for pattern,count in result:
         # We don't show unused patterns
         if count == 0:
             continue
         
-        pattern_without_zero_entries = {final: amount for final,amount in pattern.items() if amount>0}
+        pattern_without_zero_entries = {final: amount for final, amount in pattern.items() if amount>0}
         print(f"{count} times:\t{pattern_without_zero_entries}")
     
-    waste = sum(count * (raw_length - sum(final*amount for final,amount in pattern.items())) for pattern,count in result)
+    waste = sum(count * (raw_length - sum(final * amount for final, amount in pattern.items())) for pattern, count in result)
     print(f"\nTotal produced waste: {waste}\n")
 
     for final in final_demands:
         # We don't show finals that aren't overproduced
-        produced = sum(count * pattern[final] for pattern,count in result)
+        produced = sum(count * pattern[final] for pattern, count in result)
         overproduced_amount = produced-final_demands[final]
         if overproduced_amount <= 0:
             continue
