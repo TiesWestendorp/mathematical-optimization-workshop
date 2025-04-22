@@ -1,5 +1,4 @@
 from scipy.optimize import linprog
-import numpy as np
 from collections.abc import Iterator
 from itertools import product
 
