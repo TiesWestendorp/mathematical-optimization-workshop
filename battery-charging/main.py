@@ -24,6 +24,9 @@ if __name__ == "__main__":
     charge_limit = capacity * c_rating
     charging_decisions = battery_charging(initial_charge, capacity, discharge_limit, charge_limit, prices)
 
+    total_price = sum(price * decision for price, decision in zip(prices, charging_decisions))
+    print(f"Total price:\t{total_price}")
+
     state_of_charge = [initial_charge]
     for charge_decision in charging_decisions:
         state_of_charge.append(state_of_charge[-1] + charge_decision)
