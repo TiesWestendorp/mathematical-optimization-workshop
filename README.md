@@ -33,10 +33,10 @@ Consider a factory which is faced with choosing how much of two different produc
 This can be found by solving the following optimization problem:
 
 $$\begin{matrix}
-\text{maximize}\hspace{0.5em} 10x_1 + 5x_2\hspace{3em}\\\
-\text{subject to}\hspace{0.5em} 10x_1 + 8x_2 \leq 120\\\
-\hspace{4.2em}10x_1 + 2x_2 \leq 60\\\
-\hspace{3.5em}x_1 \geq 0, x_2 \geq 0.\end{matrix}$$
+\text{maximize} & 10x_1 + 5x_2\\\
+\text{subject to} & 10x_1 + 8x_2 \leq 120\\\
+& 10x_1 + 2x_2 \leq 60\\\
+& x_1 \geq 0, x_2 \geq 0.\end{matrix}$$
 
 We can bring this to standard form by first negating the objective function:
 
