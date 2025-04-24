@@ -8,7 +8,7 @@ Consider a 71.4 kWh capacity battery (the average electric vehicle battery), tha
 
 $$C_t = C_0 + \sum_{k=1}^tx_k$$
 
-1. How can we utilize our battery in order to make the most profit? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html) that minimizes the linear price objective: $\sum_{t=1}^T c_t x_t$ where $c_t$ are the energy costs at time $t$ (they may be negative!), and $x_t$ is the battery (dis)charge decision on time $t$.
+1. How can we utilize our battery in order to make the most profit? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html) that minimizes the linear price objective: $\sum_{t=1}^T c_t x_t$ where $c_t$ are the energy costs at time $t$ (they may be negative!), and $x_t$ is the battery (dis)charge decision on time $t$. The following files contain sample data:
 
 - [prices-2025-4-18.csv](prices-2025-4-18.csv) contains the 1 hour window kWh-prices in euros for 2025-04-18 for a 71.4 kWh capacity battery, starting at 15 kWh state of charge.
 - [prices-2025-4-20.csv](prices-2025-4-20.csv) contains the 1 hour window kWh-prices in euros for 2025-04-20 for a 71.4 kWh capacity battery, starting at 50 kWh state of charge.
@@ -17,9 +17,8 @@ $$C_t = C_0 + \sum_{k=1}^tx_k$$
 $$0 \leq C_0 + \sum_{k=1}^t x_k \leq C_\text{max}\hspace{1em}\forall t=1,\ldots,T\hspace{1.5em}(*)\\
 x_\text{min} \leq x_t \leq x_\text{max} \hspace{4em}\forall t=1,\ldots,T\hspace{1em}(**)$$
 
-2. Battery must be at least the initial charge at the end of the day
+2. It turns out to be profitable to fully discharge the battery, which is not what we want! We want to utilize the battery for trading, but to return to _at least_ the initial charge at the end of the day, such that the battery is more or less "stable". Adapt your program.
 
-3. Charge must always be at least 50% after 50% of time has elapsed
+3. Rather than only being stable, we want the battery to be somewhat usable after a certain period: the state of charge must be at least 50% for all time periods after 50% of time has elapsed. Adapt your program.
 
-[profile.csv](profile.csv) contains the expected 1 hour window net energy consumption/production-profile for a full day. How can we utilize our battery in order to flatten the curve as much as possible? Write a least squares optimization problem using TODO. Minimize the sum of squares objective: $\sum_k {(x_k - p_k)^2}$, where $x_k$ is the battery (dis)charge decision on time $k$, and $p_k$ is the expected net profile without the battery.
-3. What do you suspect happens if multiple devices are present in the network under each of these objectives?
+4. What do you suspect happens if multiple batteries are present in the network?
