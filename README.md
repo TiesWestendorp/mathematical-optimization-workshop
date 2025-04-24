@@ -34,22 +34,27 @@ This can be found by solving the following optimization problem:
 
 $$\begin{matrix}
 \text{maximize} & 10x_1 + 5x_2\\\
-\text{subject to} & 10x_1 + 8x_2 \leq 120\\\
-& 10x_1 + 2x_2 \leq 60\\\
-& x_1 \geq 0, x_2 \geq 0.\end{matrix}$$
+\text{subject to} & 10x_1 + 8x_2 \leq 120,\\\
+& 10x_1 + 2x_2 \leq 60,\\\
+& x_1 \geq 0, x_2 \geq 0.
+\end{matrix}$$
 
 We can bring this to standard form by first negating the objective function:
 
-$$\text{minimize}\hspace{0.5em} -10x - 5y\hspace{2.1em}\\\
-\text{subject to}\hspace{0.5em} 10x + 8y \leq 120\\\
-\hspace{4.2em}10x + 2y \leq 60\\\
-\hspace{3.5em}x \geq 0, y \geq 0.$$
+$$\begin{matrix}
+\text{minimize} & -10x - 5y\\\
+\text{subject to} & 10x + 8y \leq 120,\\\
+& 10x + 2y \leq 60,\\\
+& x \geq 0, y \geq 0.
+\end{matrix}$$
 
 And next figuring out $A$, $b$ and $c$: 
 
-$$\text{minimize}\hspace{0.5em} \left(\begin{matrix}-10 & -5\end{matrix}\right)\left(\begin{matrix}x \\\ y\end{matrix}\right)\hspace{3.9em}\\\
-\text{subject to}\hspace{0.5em} \left(\begin{matrix}10 & 8 \\\ 10 & 2\end{matrix}\right)\left(\begin{matrix}x \\\ y\end{matrix}\right) \leq \left(\begin{matrix}120 \\\ 60\end{matrix}\right)\\\
-\hspace{3.5em}x \geq 0, y \geq 0.$$
+$$\begin{matrix}
+\text{minimize} & \left(\begin{matrix}-10 & -5\end{matrix}\right)\left(\begin{matrix}x \\\ y\end{matrix}\right)\hspace{3.9em}\\\
+\text{subject to} & \left(\begin{matrix}10 & 8 \\\ 10 & 2\end{matrix}\right)\left(\begin{matrix}x \\\ y\end{matrix}\right) \leq \left(\begin{matrix}120 \\\ 60\end{matrix}\right)\\\
+& x \geq 0, y \geq 0.
+\end{matrix}$$
 
 And finally solving this through [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html):
 
