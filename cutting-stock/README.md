@@ -26,7 +26,7 @@ On a particularly busy day, you are given the following order to fulfill (as see
 ## Exercises
 
  1. What is the minimum number of raws that are required to be able to fulfill the order? How should those raws be cut? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
->! Let $x_k$ represent the number of raws that are cut according to pattern $k$.
+> Hint: Let $x_k$ represent the number of raws that are cut according to pattern $k$.
  2. Rather than minimizing the number of used raws, how do we minimize the produced waste while still fulfilling the order? How should the raws be cut? Alter your previous program to account for this.
  3. While minimizing waste, we favoured overproducing finals over creating waste. Since we probably often chose to produce according to patterns with zero waste - so we reduced waste, at the cost of using more raws in order to overproduce. In reality, however, overproduced finals are also undesirable (though not as undesirable as waste), since they need to be stored until a new order comes in where they can be used. Let's consider overproduced finals to be as bad as half their length in waste, e.g. a single overproduced final of length 14 is as bad as a waste of 7. Alter your previous program to account for this.
 
