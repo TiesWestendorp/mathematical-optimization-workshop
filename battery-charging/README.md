@@ -8,17 +8,29 @@ Consider a 71.4 kWh capacity battery (the average electric vehicle battery), tha
 
 $$C_t = C_0 + \sum_{k=1}^tx_k$$
 
-1. How can we utilize our battery in order to make the most profit? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html) that minimizes the linear price objective: $\sum_{t=1}^T c_t x_t$ where $c_t$ are the energy costs at time $t$ (they may be negative!), and $x_t$ is the battery (dis)charge decision on time $t$. The following files contain sample data:
+Energy prices are always in flux. Attached are a several files with 1 hour window kWh-prices in euros for different dates:
 
-- [prices-2025-4-18.csv](prices-2025-4-18.csv) contains the 1 hour window kWh-prices in euros for 2025-04-18 for a 71.4 kWh capacity battery, starting at 15 kWh state of charge.
-- [prices-2025-4-20.csv](prices-2025-4-20.csv) contains the 1 hour window kWh-prices in euros for 2025-04-20 for a 71.4 kWh capacity battery, starting at 50 kWh state of charge.
-- [prices-2025-4-21.csv](prices-2025-4-21.csv) contains the 1 hour window kWh-prices in euros for 2025-04-21 for a 71.4 kWh capacity battery, starting at 15 kWh state of charge.
+- [prices-2025-4-18.csv](prices-2025-4-18.csv) contains the prices for 2025-04-18 for a 71.4 kWh capacity battery, starting at 15 kWh state of charge.
+- [prices-2025-4-20.csv](prices-2025-4-20.csv) contains the prices for 2025-04-20 for a 71.4 kWh capacity battery, starting at 50 kWh state of charge.
+- [prices-2025-4-21.csv](prices-2025-4-21.csv) contains the prices for 2025-04-21 for a 71.4 kWh capacity battery, starting at 15 kWh state of charge.
 
-$$0 \leq C_0 + \sum_{k=1}^t x_k \leq C_\text{max}\hspace{1em}\forall t=1,\ldots,T\hspace{1.5em}(*)\\
-x_\text{min} \leq x_t \leq x_\text{max} \hspace{4em}\forall t=1,\ldots,T\hspace{1em}(**)$$
+## Exercises
 
-2. It turns out to be profitable to fully discharge the battery, which is not what we want! We want to utilize the battery for trading, but to return to _at least_ the initial charge at the end of the day, such that the battery is more or less "stable". Adapt your program.
+> We can never overdeplete or overcharge the battery; the state of charge at every moment in time ($1,\ldots,T$) must be between zero and the capacity of the battery. Also, we can at most discharge and charge a certain amount in each time interval.
+
+$$\begin{matrix}
+0 \leq C_0 + \sum_{k=1}^t x_k \leq C_\text{max}\hspace{1em} & \forall t=1,\ldots,T\\\
+x_\text{min} \leq x_t \leq x_\text{max} \hspace{4em} & \forall t=1,\ldots,T\end{matrix}$$
+
+> Assume that not only do we pay $c_t$ per kWh for charging the battery at time $t$, but we would also earn $c_t$ per kWh for discharging to the network. (Note that $c_t$ can be negative! In those cases, it's actually profitable to charge the battery.)
+
+1. How can we utilize our battery in order to make the most profit? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
+
+> The battery is fully depleted at the end of the day. For trading, this is fine, but not if we also plan to use the car at some point.
+
+2. Adapt your program such that it holds _at least_ the initial state of charge at the end of the day, such that the battery is more or less "stable".
 
 3. Rather than only being stable, we want the battery to be somewhat usable after a certain period: the state of charge must be at least 50% for all time periods after 50% of time has elapsed. Adapt your program.
 
 4. What do you suspect happens if multiple batteries are present in the network?
+
