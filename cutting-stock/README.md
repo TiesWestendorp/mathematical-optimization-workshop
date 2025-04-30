@@ -25,10 +25,17 @@ On a particularly busy day, you are given the following order to fulfill (as see
 
 ## Exercises
 
- 1. What is the minimum number of raws that are required to be able to fulfill the order? How should those raws be cut? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
-> Hint: Let $x_k$ represent the number of raws that are cut according to pattern $k$.
- 2. Rather than minimizing the number of used raws, how do we minimize the produced waste while still fulfilling the order? How should the raws be cut? Alter your previous program to account for this.
- 3. While minimizing waste, we favoured overproducing finals over creating waste. Since we probably often chose to produce according to patterns with zero waste - so we reduced waste, at the cost of using more raws in order to overproduce. In reality, however, overproduced finals are also undesirable (though not as undesirable as waste), since they need to be stored until a new order comes in where they can be used. Let's consider overproduced finals to be as bad as half their length in waste, e.g. a single overproduced final of length 14 is as bad as a waste of 7. Alter your previous program to account for this.
+> Let $x_k$ represent the number of raws that are cut according to pattern $k$. We should at least produce the number of finals as specified in the client order. How do the constraints look, as a function of $x_k$? Are there any other constraints?
+
+ 1. Minimize the number of raws that are required to be able to fulfill the order. How should those raws be cut? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
+
+> As it turns out, quite some waste is generated when minimizing the number of used raws. Hence, rather than minimizing the number of used raws, let's instead minimize the produced waste. How do we express the total waste as a function of $x_k$?
+
+ 2. Adapt your program to minimize the produced waste while still fulfilling the order. How should the raws be cut?
+
+> While minimizing waste, we favoured overproducing finals over creating waste: we often chose to produce according to patterns with zero waste - so we reduced waste, but at the cost of using more raws in order to overproduce. In reality, however, overproduced finals are also undesirable (though not as undesirable as waste), since they need to be stored until a new order comes in where they can be used.
+
+ 3. Let's consider overproduced finals to be as bad as half their length in waste, e.g. a single overproduced final of length 14 is as bad as a waste of 7. Alter your previous program to account for this.
 
 See also:
  - [Cutting stock problem](https://en.wikipedia.org/wiki/Cutting_stock_problem)
