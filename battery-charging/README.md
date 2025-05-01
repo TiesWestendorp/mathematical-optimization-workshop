@@ -26,11 +26,9 @@ x_\text{min} \leq x_t \leq x_\text{max} \hspace{4em} & \forall t=1,\ldots,T\end{
 
 1. How can we utilize our battery in order to make the most profit? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
 
-> The battery is fully depleted at the end of the day. For trading, this is fine, but not if we also plan to use the car at some point.
+> The battery is fully depleted at the end of the day. This is fine for trading, but not if we also plan to use the car at some point.
 
 2. Adapt your program such that it holds _at least_ the initial state of charge at the end of the day, such that the battery is more or less "stable".
-
 3. Rather than only being stable, we want the battery to be somewhat usable after a certain period: the state of charge must be at least 50% for all time periods after 50% of time has elapsed. Adapt your program.
-
 4. What do you suspect happens if multiple batteries are present in the network?
-
+5. $\sum_{t=1}^T \left(c_t(x_t+p_t)^+ + s(x_t+p_t)^-\right)$
