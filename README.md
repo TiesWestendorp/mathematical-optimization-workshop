@@ -1,13 +1,18 @@
-# mathematical-optimization-workshop
+# Hands-on Mathematical Optimization
 
-During this hands-on workshop, we will solve  for mathematical optimization
+During this hands-on workshop, we will take a practical look at the field of "operations research", which is all about using mathematical optimization techniques for informed/automated decision making. We will:
 
-### Prerequisites
+ - learn how to model practical problems as optimization problems;
+ - use this to optimize two practical cases;
+ - experience how our choice of model influences the proposed decisions.
 
-- Python >= 3.9 is required
-- `scipy`: `pip install scipy`
+#### Prerequisites
 
-## Linear optimization problems
+A laptop is required for this session. Please ensure Python >= 3.9 is installed beforehand. We will make use of the following two libraries:
+ - [Scipy](https://scipy.org/), installed through: `pip install scipy`
+ - [Matplotlib](https://matplotlib.org/), installed through: `pip install matplotlib`
+
+## A little bit of theory
 
 An optimization problem is a problem of the form:
 
@@ -18,7 +23,7 @@ $$\begin{matrix}
 & \vdots \\\
 & g_k(x) \leq 0,\end{matrix}$$
 
-$x = [x_1, x_2, \ldots, x_n]$ are called _decision variables_, $f$ is called the _objective function_, and $g_i(x) \leq 0$ are called _constraints_. The goal in solving an optimization problem is to find the decision variables within certain constraints, that minimize a given objective function. This general optimization problem has no exact algorithm to solve it, hence many restricted versions exist that permit specialized algorithms (e.g. [convex optimization](https://en.wikipedia.org/wiki/Convex_optimization), [conic optimization](https://en.wikipedia.org/wiki/Conic_optimization), [semidefinite optimization](https://en.wikipedia.org/wiki/Semidefinite_programming), [quadratic optimization](https://en.wikipedia.org/wiki/Quadratic_programming)). We will look at one such specific type of optimization problem throughout this workshop: [linear optimization problems](https://en.wikipedia.org/wiki/Linear_programming).
+where $x = [x_1, x_2, \ldots, x_n]$ are called _decision variables_, $f$ is called the _objective function_, and $g_i(x) \leq 0$ are called _constraints_.  The solution to an optimization problem are the specific values for the decision variables that satisfy the constraints, that minimize the objective function. There is no exact algorithm for the general optimization problem, though specific restrictions for the decision variables, objective functions, and constraints exist that permit specialized algorithms (e.g. [convex optimization](https://en.wikipedia.org/wiki/Convex_optimization), [conic optimization](https://en.wikipedia.org/wiki/Conic_optimization), [semidefinite optimization](https://en.wikipedia.org/wiki/Semidefinite_programming), [quadratic optimization](https://en.wikipedia.org/wiki/Quadratic_programming)). We will look at the most well studied type of optimization problem in this workshop: [linear optimization problems](https://en.wikipedia.org/wiki/Linear_programming).
 
 An optimization problem is linear if the function $f$ is linear ($f(x) = c_1x_1+...+c_nx_n$ for constant $c_1,\ldots,c_n$), and all $g_i$ are "affine" ($g_i(x) = a_{i,1}x_1+...+a_{i,n}x_n+b_i$ for constant $a_{i,1},\ldots,a_{i,n},b_i$). Linear optimization problems are also called linear programming problems ("programming" meaning "optimization" predates the modern meaning of the word "programming", to avoid confusion we'll stick to "optimization").
 
@@ -41,7 +46,7 @@ such that each row of $A$ represents one of the $k$ constraints.
 
 Linear optimization problems can be solved _exactly_ in polynomial time (meaning we can efficiently find the global optimal solution).
 
-If at least one of the decision variables $x_i$ are additionally restricted to the integers, we refer to the problem as the [integer optimization problem or mixed integer-linear optimization](https://en.wikipedia.org/wiki/Integer_programming). In this case can still find the optimal solution, but there are currently no known algorithms that run in polynomial time (in fact, if we would have such an algorithm, we would have solved the famous [P versus NP problem](https://en.wikipedia.org/wiki/P_versus_NP_problem), since the integer programming problem is [NP-complete](https://en.wikipedia.org/wiki/NP-completeness)). Nevertheless, solutions can be found reasonably quickly up to moderate problem sizes (depending on the problem, of course).
+If some of the decision variables $x_i$ are additionally restricted to the integers, we refer to the problem as the [integer optimization problem or mixed integer-linear optimization](https://en.wikipedia.org/wiki/Integer_programming). In this case can still find the optimal solution, but there are currently no known algorithms that run in polynomial time (in fact, if we would have such an algorithm, we would have solved the famous [P versus NP problem](https://en.wikipedia.org/wiki/P_versus_NP_problem), since the integer programming problem is [NP-complete](https://en.wikipedia.org/wiki/NP-completeness)). Nevertheless, solutions can be found reasonably quickly up to moderate problem sizes (depending on the problem, of course).
 
 ## Example: profit maximization
 
@@ -82,12 +87,15 @@ A = [[10, 8], [10, 2]]
 b = [120, 60]
 c = [-10, -5]
 x,y = linprog(c, A_ub = A, b_ub = b).x # bounds = (0, None) is the default
-print(x, y) # Prints 4.0, 10.0
+print(x, y) # What does thsi print?
 ```
 
-In this case, we happen to obtain an integer solution, which is great, because we probably can't create half of a product, and expect to get half of its profit!
+In this case, we happen to obtain an integer solution, which is great, because we probably can't create half of a product, and expect to get half of its profit! In general though, the answer need not be restricted to the integers.
 
-In general though, the answer need not be restricted to the integers. For example if the amount of available production minutes gets reduced to 100, such that `b = [100, 60]`, the optimal solution becomes $x = \tfrac{14}{3}\approx 4.667, y = \tfrac{20}{3} \approx 6.667$. If we want to find the best _integer_ solution, we additionally need to impose the integrality constraints: $x\in\mathbb{Z}$ and $y\in\mathbb{Z}$ (specified through the `integrality` parameter in `linprog`).
-
-- What is the best integer solution when $b = [100, 60]$?
+- What is the solution if the amount of available production minutes gets reduced to 100, such that `b = [100, 60]`?
+- What is the best integer solution when $b = [100, 60]$? (Variables can be restricted to the integers through the `integrality` parameter, see the documentation of [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).)
 - What do you notice when comparing it with the best non-integer solution?
+
+## Exercise: [the cutting stock problem](./cutting-stock/README.md)
+
+## Exercise: [the battery charging problem](./battery-charging/README.md)
