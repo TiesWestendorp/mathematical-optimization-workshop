@@ -16,19 +16,33 @@ Energy prices are always in flux. Attached are a several files with 1 hour windo
 
 ## Exercises
 
-> We can never overdeplete or overcharge the battery; the state of charge at every moment in time ($1,\ldots,T$) must be between zero and the capacity of the battery. Also, we can at most discharge and charge a certain amount in each time interval.
+We can never "overdischarge" or "overcharge" the battery - the state of charge at every moment in time must be between zero and the capacity of the battery. Also, we can at most discharge and charge a certain amount in each time interval.
 
 $$\begin{matrix}
-0 \leq C_0 + \sum_{k=1}^t x_k \leq C_\text{max}\hspace{1em} & \forall t=1,\ldots,T\\\
-x_\text{min} \leq x_t \leq x_\text{max} \hspace{4em} & \forall t=1,\ldots,T\end{matrix}$$
+0 \leq C_0 + x_1 \leq C_\text{max}\hspace{1em} \\
+0 \leq C_0 + x_1 + x_2 \leq C_\text{max}\hspace{1em} \\
+0 \leq C_0 + x_1 + x_2 + x_3 \leq C_\text{max}\hspace{1em} \\
+\vdots \\\\
+x_\text{min} \leq x_1 \leq x_\text{max}\\
+x_\text{min} \leq x_2 \leq x_\text{max}\\
+x_\text{min} \leq x_3 \leq x_\text{max}\\
+\vdots\\
+\end{matrix}$$
 
-> Assume that not only do we pay $c_t$ per kWh for charging the battery at time $t$, but we would also earn $c_t$ per kWh for discharging to the network. (Note that $c_t$ can be negative! In those cases, it's actually profitable to charge the battery.)
+Assume that the hourly kWh prices $c_t$ are known, and that we can consume energy at that price, but also discharge energy to yield payment for the current price. (Note that $c_t$ can be negative! In those cases, it's actually profitable to charge the battery.)
 
 1. How can we utilize our battery in order to make the most profit? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
 
-> The battery is fully depleted at the end of the day. This is fine for trading, but not if we also plan to use the car at some point.
+The battery is fully depleted at the end of the day. This is fine for trading, but not if we also plan to use the car at some point. If we decide to use the car battery for energy trading, it makes sense to expect the state of charge to be more or less stable, in the sense that the state of charge at the end of the day equals to the initial state of charge.
 
-2. Adapt your program such that it holds _at least_ the initial state of charge at the end of the day, such that the battery is more or less "stable".
-3. Rather than only being stable, we want the battery to be somewhat usable after a certain period: the state of charge must be at least 50% for all time periods after 50% of time has elapsed. Adapt your program.
-4. What do you suspect happens if multiple batteries are present in the network?
-5. $\sum_{t=1}^T \left(c_t(x_t+p_t)^+ + s(x_t+p_t)^-\right)$
+2. Adapt your program such that the battery holds _at least_ the initial state of charge at the end of the day, such that the battery is more or less "stable".
+
+What if we make up our mind and want to use our car at some point during the day? It makes sense to impose additional constraints on how full it should be.
+
+3. Instead of only being stable, we the state of charge to be at least 50% for all time periods after 50% of time has elapsed. Adapt your program.
+
+> What do you suspect happens if multiple batteries are present in the network that use our strategy?
+
+**Bonus question:** In practice, we're not able to trade back at the current spot price, but get a fixed (low) subsidy per kWh $s$ for providing energy if our net energy profile (the sum of our other energy usage along with the battery $x_t + p_t$) is negative, and pay $c_t$ per kWh otherwise.
+ 
+This means that we don't minimize $\sum_{t=1}^T c_tx_t$, but rather: $\sum_{t=1}^T \left(c_t(x_t+p_t)^+ + s(x_t+p_t)^-\right)$. It's not straightforward, but there is a way to formulate this as a linear optimization problem.

@@ -33,7 +33,33 @@ On a particularly busy day, you are given the following order to fulfill (as see
 
 ## Exercises
 
-> Let $x_p$ represent the number of raws that are cut according to pattern $p$, and let $a_{f,p}$ represent the amount of finals $f$ produced by pattern $p$. We should at least produce the number of finals as specified in the client order. How do the constraints look, as a function of $x_p$? Are there any other constraints?
+In total, there are 13 different patterns by which we can cut up the raw material without leaving a piece of waste larger than the smallest possible final length (140 in our case). Let's say we will associate a variable with each of these patterns, indicating how many raws we cut according to this pattern. I.e.:
+
+- $x_1$ indicates how many raws we cut into one piece of 140, 360, and 450 each
+- $x_2$ indicates how many raws we cut into two pieces of 320, and one piece of 360
+- $x_3$ indicates how many raws we cut into two pieces of 450
+- $x_4$ indicates how many raws we cut into seven pieces of 140
+- et cetera.
+
+Such that at least producing the number of finals from the customer order with just these first four patterns can be formulated as:
+$$
+x_1 + 7x_4 \geq 211,\\
+2x_2 \geq 395,\\
+x_1 + x_2 \geq 610,\\
+x_1 + 2x_3 \geq 97.
+$$
+
+Rewritten in standard form, these become:
+$$
+-x_1 - 7x_4 \leq -211,\\
+-2x_2 \leq -395,\\
+-x_1 - x_2 \leq -610,\\
+-x_1 -2x_3 \leq -97.
+$$
+
+In other words, for each final length $f$, we add a linear constraint 
+
+If we let $x_p$ represent the number of raws that are cut according to pattern $p$, and let $a_{f,p}$ represent the amount of finals $f$ produced by pattern $p$. We should at least produce the number of finals as specified in the customer order. How do the constraints look, as a function of $x_p$? Are there any other constraints?
 
  1. Minimize the number of raws that are required to be able to fulfill the order. How should the raws be cut? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
 
@@ -44,6 +70,10 @@ On a particularly busy day, you are given the following order to fulfill (as see
 > While minimizing waste, we favoured overproducing finals over creating waste: we often chose to produce according to patterns with zero waste - so we reduced waste, but at the cost of using more raws in order to overproduce. In reality, however, overproduced finals are also undesirable (though not as undesirable as waste), since they need to be stored until a new order comes in where they can be used. Introduce a new variable for each final, that represents how much overproduction occurs for each final.
 
  3. Let's consider overproduced finals to be as bad as half their length in waste, e.g. a single overproduced final of length 14 is as bad as a waste of 7. Alter your previous program to account for this.
+
+> BONUS QUESTION: Fulfilling demand while minimizing waste and overproduction seems much more reasonable, but there is a practical consideration we haven't accounted for: reconfiguring the saw to a different pattern also requires effort. There are multiple ways by which we might tackle this problem. One of these is to limit the number of different patterns that we use. We will introduce boolean variables $`y`_k$ that are $1$ when $x_k > 0$, and $0$ otherwise (they indicate whether pattern $k$ is "used"). To ensure this is the case, add the constraints: $x_k \leq M z_k$, where $M$ is a "very big constant". This constraint ensures that $x_k$ can not be non-zero while $z_k$ is zero.
+
+ 4. Alter your program by adding a constraint that limits the number of different patterns used to three. 
 
 See also:
  - [Cutting stock problem](https://en.wikipedia.org/wiki/Cutting_stock_problem)
