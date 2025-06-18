@@ -16,7 +16,7 @@ def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
             yield dict(zipped)
 
 def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[dict[int,int],int]]:
-    finals = list(final_demands.keys())
+    finals = final_demands.keys()
     possible_patterns = list(patterns(finals, raw_length))
 
     M = sum(final_demands.values())
