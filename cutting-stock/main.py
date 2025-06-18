@@ -58,10 +58,9 @@ if __name__ == "__main__":
         # We don't show unused patterns
         if count == 0:
             continue
-
         pattern_without_zero_entries = {final: amount for final,amount in pattern.items() if amount>0}
         print(f"{count} times:\t{pattern_without_zero_entries}")
-
+    
     waste = sum(count * (raw_length - sum(final*amount for final,amount in pattern.items())) for pattern,count in result)
     print(f"\nTotal produced waste: {waste}\n")
 
