@@ -2,7 +2,18 @@ from scipy.optimize import linprog
 import matplotlib.pyplot as plt
 
 def battery_charging(initial_charge: float, capacity: float, discharge_limit: float, charge_limit: float, prices: list[float]) -> list[float]:
-    raise NotImplementedError # TODO: Optimize using `linprog`
+    A_ub = []
+    b_ub = []
+    for time, _ in enumerate(prices):
+        # Battery can not be charged less than 0%
+        A_ub.append([-1 if time >= t else 0 for t,_ in enumerate(prices)])
+        b_ub.append(initial_charge)
+
+        # Battery can not be charged more than 100%
+        A_ub.append([1 if time >= t else 0 for t,_ in enumerate(prices)])
+        b_ub.append(capacity - initial_charge)
+
+    return list(map(float, linprog(prices, A_ub = A_ub, b_ub = b_ub, bounds=(discharge_limit,charge_limit)).x))
 
 if __name__ == "__main__":
     import argparse
