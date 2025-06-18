@@ -63,17 +63,19 @@ If we let $x_p$ represent the number of raws that are cut according to pattern $
 
  1. Minimize the number of raws that are required to be able to fulfill the order. How should the raws be cut? Write an [ILP program](https://en.wikipedia.org/wiki/Integer_programming) using [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
 
-> As it turns out, quite some waste is generated when minimizing the number of used raws. Hence, rather than minimizing the number of used raws, let's instead minimize the produced waste. How do we express the total waste as a function of $x_p$?
+As it turns out, quite some waste is generated when minimizing the number of used raws. Hence, rather than minimizing the number of used raws, let's instead minimize the produced waste. How do we express the total waste as a function of $x_p$?
 
  2. Adapt your program to minimize the produced waste while still fulfilling the order. How should the raws be cut?
 
-> While minimizing waste, we favoured overproducing finals over creating waste: we often chose to produce according to patterns with zero waste - so we reduced waste, but at the cost of using more raws in order to overproduce. In reality, however, overproduced finals are also undesirable (though not as undesirable as waste), since they need to be stored until a new order comes in where they can be used. Introduce a new variable for each final, that represents how much overproduction occurs for each final.
+While minimizing waste, we favoured overproducing finals over creating waste: we often chose to produce according to patterns with zero waste - so we reduced waste, but at the cost of using more raws in order to overproduce. In reality, however, overproduced finals are also undesirable (though not as undesirable as waste), since they need to be stored until a new order comes in where they can be used. Introduce a new variable for each final, that represents how much overproduction occurs for each final.
 
  3. Let's consider overproduced finals to be as bad as half their length in waste, e.g. a single overproduced final of length 14 is as bad as a waste of 7. Alter your previous program to account for this.
 
-> BONUS QUESTION: Fulfilling demand while minimizing waste and overproduction seems much more reasonable, but there is a practical consideration we haven't accounted for: reconfiguring the saw to a different pattern also requires effort. There are multiple ways by which we might tackle this problem. One of these is to limit the number of different patterns that we use. We will introduce boolean variables $`y`_k$ that are $1$ when $x_k > 0$, and $0$ otherwise (they indicate whether pattern $k$ is "used"). To ensure this is the case, add the constraints: $x_k \leq M z_k$, where $M$ is a "very big constant". This constraint ensures that $x_k$ can not be non-zero while $z_k$ is zero.
+**Bonus question**: Fulfilling demand while minimizing waste and overproduction seems much more reasonable, but there is a practical consideration we haven't accounted for: reconfiguring the saw to a different pattern also requires effort. There are multiple ways by which we might account for this. One way is to limit the number of different patterns that we use. We will introduce boolean variables $z_k$ that are $1$ when $x_k > 0$, and $0$ otherwise (they indicate whether pattern $k$ is "used"). To ensure this is the case, add the constraints: $x_k \leq M z_k$, where $M$ is a "very big constant". This constraint ensures that $x_k$ can not be non-zero while $z_k$ is zero.
 
- 4. Alter your program by adding a constraint that limits the number of different patterns used to three. 
+ 4. We must choose $M$ such that $x_k$ does not become limited by the constraint. Which value is appropriate?
+
+ 5. Alter your program by adding a constraint that limits the number of different patterns used to three. 
 
 See also:
  - [Cutting stock problem](https://en.wikipedia.org/wiki/Cutting_stock_problem)
