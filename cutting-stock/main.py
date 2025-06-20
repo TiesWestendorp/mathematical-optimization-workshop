@@ -2,7 +2,11 @@ from scipy.optimize import linprog
 from collections.abc import Iterator
 from itertools import product
 
-def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
+# Type alias for patterns. Each `(key,value)`-pair indicates how many finals are produced in this pattern. The `key`
+# holds the different final lengths, and the `value` how many of those finals are produced.
+Pattern = dict[int,int]
+
+def patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]:
     smallest_final = min(finals)
     maximum_in_raw_per_final = [range(raw_length//final + 1) for final in finals]
 
@@ -12,11 +16,11 @@ def patterns(finals: list[int], raw_length: int) -> Iterator[dict[int,int]]:
         waste = raw_length - pattern_length
 
         # The pattern must not exceed the raw_length, and no final must be cuttable from the waste
-        if waste >= 0 and waste <= smallest_final:
+        if 0 <= waste <= smallest_final:
             yield dict(zipped)
 
-def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[dict[int,int],int]]:
-    finals = final_demands.keys()
+def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[Pattern,int]]:
+    finals = list(final_demands.keys())
     possible_patterns = list(patterns(finals, raw_length))
 
     over_production_per_final = [0.5 * f for f in finals]
@@ -34,7 +38,7 @@ def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[d
         b_eq = b_eq,
         integrality = ones + [0 for _ in finals])
 
-    return list(filter(lambda x: x[1] > 0, zip(possible_patterns, map(int, result.x))))
+    return list(zip(possible_patterns, map(int, result.x)))
 
 if __name__ == "__main__":
     import argparse
@@ -65,7 +69,7 @@ if __name__ == "__main__":
             continue
         pattern_without_zero_entries = {final: amount for final,amount in pattern.items() if amount>0}
         print(f"{count} times:\t{pattern_without_zero_entries}")
-    
+
     waste = sum(count * (raw_length - sum(final*amount for final,amount in pattern.items())) for pattern,count in result)
     print(f"\nTotal produced waste: {waste}\n")
 
