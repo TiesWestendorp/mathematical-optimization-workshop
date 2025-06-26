@@ -87,7 +87,7 @@ A = [[10, 8], [10, 2]]
 b = [120, 60]
 c = [-10, -5]
 x,y = linprog(c, A_ub = A, b_ub = b).x # bounds = (0, None) is the default
-print(x, y) # What does thsi print?
+print(x, y) # What does this print?
 ```
 
 In this case, we happen to obtain an integer solution, which is great, because we probably can't create half of a product, and expect to get half of its profit! In general though, the answer need not be restricted to the integers.
