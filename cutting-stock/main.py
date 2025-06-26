@@ -23,10 +23,30 @@ def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[P
     finals = list(final_demands.keys())
     possible_patterns = list(patterns(finals, raw_length))
 
-    raise NotImplementedError
+    M = sum(final_demands.values())
+    over_production_per_final = [0.5 * f for f in finals]
+    waste_per_pattern = [raw_length - sum(final * count for final,count in pattern.items()) for pattern in possible_patterns]
+    zeroes = [0 for _ in possible_patterns]
+    ones = [1 for _ in possible_patterns]
+    A_eq = []
+    b_eq = []
+    for final in finals:
+        A_eq.append([-pattern[final] for pattern in possible_patterns] + [f == final for f in finals] + zeroes)
+        b_eq.append(-final_demands[final])
+    A_ub = []
+    b_ub = []
+    for i,_ in enumerate(possible_patterns):
+        A_ub.append([i == j for j,_ in enumerate(possible_patterns)] + [0 for _ in finals] + [-M * (i == j) for j,_ in enumerate(possible_patterns)])
+        b_ub.append(0)
+    A_ub.append(zeroes + [0 for _ in finals] + ones)
+    b_ub.append(3)
 
-    # TODO: Optimize using `linprog`
-    result = linprog()
+    result = linprog(
+        waste_per_pattern + over_production_per_final + zeroes,
+        A_eq = A_eq, b_eq = b_eq,
+        A_ub = A_ub, b_ub = b_ub,
+        integrality = ones + [0 for _ in finals] + ones,
+        bounds = (len(possible_patterns)+len(finals))*[(0,None)] + len(possible_patterns)*[(0,1)])
 
     return list(zip(possible_patterns, map(int, result.x)))
 
