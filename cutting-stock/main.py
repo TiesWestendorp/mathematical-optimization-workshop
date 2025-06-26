@@ -16,7 +16,7 @@ def patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]:
         waste = raw_length - pattern_length
 
         # The pattern must not exceed the raw_length, and no final must be cuttable from the waste
-        if 0 <= waste <= smallest_final:
+        if 0 <= waste < smallest_final:
             yield dict(zipped)
 
 def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[Pattern,int]]:
