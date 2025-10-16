@@ -48,10 +48,11 @@ x_1 + x_2 \geq 610,\\
 x_1 + 2x_3 \geq 97.$$
 
 Rewritten in standard form, these become:
-$$-x_1 - 7x_4 \leq -211,\\
--2x_2 \leq -395,\\
--x_1 - x_2 \leq -610,\\
--x_1 -2x_3 \leq -97.$$
+
+$$-x_1 - 7x_4 \leq -211,$$
+$$-2x_2 \leq -395,$$
+$$-x_1 - x_2 \leq -610,$$
+$$-x_1 -2x_3 \leq -97.$$
 
 In other words, for each final length $f$, we add a linear constraint 
 
