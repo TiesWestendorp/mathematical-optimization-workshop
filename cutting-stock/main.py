@@ -6,7 +6,7 @@ from itertools import product
 # holds the different final lengths, and the `value` how many of those finals are produced.
 Pattern = dict[int,int]
 
-def patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]:
+def patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]: # TODO: Change to list, rename method
     smallest_final = min(finals)
     maximum_in_raw_per_final = [range(raw_length//final + 1) for final in finals]
 
@@ -20,13 +20,34 @@ def patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]:
             yield dict(zipped)
 
 def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[Pattern,int]]:
-    finals = list(final_demands.keys())
+    finals = list(final_demands.keys()) # TODO: rename + comments
     possible_patterns = list(patterns(finals, raw_length))
 
     raise NotImplementedError
 
+    # finals = [ 140, 320, 360, 450 ]
+    # final_demands = { # TODO: final_to_demands
+    #   140: 211,
+    #   ...
+    # }
+
+    # TODO: add comment about possible_patterns
+    # possible_patterns = [
+    #   { 140: 1, 320: 0, 360: 1, 450: 1 }, # <- First pattern
+    #   { 140: ., 320: ., 360: ., 450: . }, # <- Second pattern
+    #   ...
+    # ]
+
     # TODO: Optimize using `linprog`
-    result = linprog()
+
+    # A_ub = []
+    # b_ub = []
+    # for final in finals:
+    #   demand = final_demands[final]
+    #   A_ub.append()
+    #   b_ub.append()
+    
+    result = linprog(c, A_ub = A_ub, b_ub = b_ub, integrality = 1)
 
     return list(zip(possible_patterns, map(int, result.x)))
 
