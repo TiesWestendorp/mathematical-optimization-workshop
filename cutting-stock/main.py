@@ -6,29 +6,62 @@ from itertools import product
 # holds the different final lengths, and the `value` how many of those finals are produced.
 Pattern = dict[int,int]
 
-def patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]:
+def generate_patterns(finals: list[int], raw_length: int) -> Iterator[Pattern]:
     smallest_final = min(finals)
     maximum_in_raw_per_final = [range(raw_length//final + 1) for final in finals]
 
     for pattern in product(*maximum_in_raw_per_final):
-        zipped = list(zip(finals, pattern)) # zip-objects are iterators, but we want to iterate it twice, so we transform it into a list here
-        pattern_length = sum(final * amount for final, amount in zipped)
-        waste = raw_length - pattern_length
+        zipped = dict(zip(finals, pattern)) # zip-objects are iterators, but we want to iterate it more than once, so we transform it into a dict here
 
         # The pattern must not exceed the raw_length, and no final must be cuttable from the waste
-        if 0 <= waste < smallest_final:
-            yield dict(zipped)
+        if 0 <= waste_for_pattern(raw_length, zipped) < smallest_final:
+            yield zipped
 
-def cutting_stock(raw_length: int, final_demands: dict[int,int]) -> list[tuple[Pattern,int]]:
-    finals = list(final_demands.keys())
-    possible_patterns = list(patterns(finals, raw_length))
+def waste_for_pattern(raw_length: int, pattern: Pattern) -> int:
+    # The waste is whatever remains of the raw after removing all finals produced by the pattern
+    return raw_length - sum(final * count for final,count in pattern.items())
+
+def cutting_stock(raw_length: int, final_to_demands: dict[int,int]) -> list[tuple[Pattern,int]]:
+    finals = list(final_to_demands.keys())
+    patterns = list(generate_patterns(finals, raw_length))
+
+    # Each entry in `finals` is a length of a final that needs to be produced
+    # finals = [ 140, 320, 360, 450 ]
+
+    # Each pair in `final_to_demands` indicates how many of each final needs to be produced
+    # final_to_demands = {
+    #   140: 211,
+    #   320: 395,
+    #   360: 610,
+    #   450: 97,
+    # }
+
+    # Each entry of `patterns` is a dictionary that indicates how many of each final is produced by that pattern
+    # patterns = [
+    #   { 140: 0, 320: 0, 360: 0, 450: 2 },
+    #   { 140: 0, 320: 2, 360: 1, 450: 0 },
+    #   { 140: 0, 320: 3, 360: 0, 450: 0 },
+    #   { 140: 1, 320: 0, 360: 1, 450: 1 },
+    #     ... and 8 more ...
+    # ]
 
     raise NotImplementedError
 
-    # TODO: Optimize using `linprog`
-    result = linprog()
+    # Each decision variable corresponds to a pattern, and indicates how many of that pattern is produced
 
-    return list(zip(possible_patterns, map(int, result.x)))
+    objective = [] # TODO:
+
+    inequality_constraints_matrix = []
+    inequality_constraints_vector = []
+    for final,demand in final_to_demands.items():
+       # Each `final` has a constraint: we must produce at least as many as the `demand` specifies
+       inequality_constraints_matrix.append([]) # TODO: Build up the constraints matrix row by row for each final
+       inequality_constraints_vector.append() # TODO: Build up the constraints vector row by row for each final
+
+    # Optimize using `linprog`
+    result = linprog(objective, A_ub = inequality_constraints_matrix, b_ub = inequality_constraints_vector, integrality = 1)
+
+    return list(zip(patterns, map(int, result.x)))
 
 if __name__ == "__main__":
     import argparse
@@ -38,16 +71,16 @@ if __name__ == "__main__":
     file_name = parser.parse_args().file
 
     raw_length = None
-    final_demands = None
+    final_to_demands = None
     with open(file_name, "r") as file:
         lines = file.readlines()
         raw_length = int(lines[0])
-        final_demands = dict(map(lambda line: map(int, line.split(",")), lines[1:]))
+        final_to_demands = dict(map(lambda line: map(int, line.split(",")), lines[1:]))
 
     print(f"Specified raw length: {raw_length}")
-    print(f"Specified final demands: {final_demands}\n")
+    print(f"Specified final demands: {final_to_demands}\n")
 
-    result = cutting_stock(raw_length, final_demands)
+    result = cutting_stock(raw_length, final_to_demands)
 
     print("Result")
     print("------")
@@ -63,10 +96,10 @@ if __name__ == "__main__":
     waste = sum(count * (raw_length - sum(final*amount for final,amount in pattern.items())) for pattern,count in result)
     print(f"\nTotal produced waste: {waste}\n")
 
-    for final in final_demands:
+    for final in final_to_demands:
         # We don't show finals that aren't overproduced
         produced = sum(count * pattern[final] for pattern,count in result)
-        overproduced_amount = produced-final_demands[final]
+        overproduced_amount = produced-final_to_demands[final]
         if overproduced_amount <= 0:
             continue
         
