@@ -49,7 +49,7 @@ def cutting_stock(raw_length: int, final_to_demands: dict[int,int]) -> list[tupl
 
     # Each decision variable corresponds to a pattern, and indicates how many of that pattern is produced
 
-    objective = [] # TODO:
+    objective = [] # TODO: Define the 'weights' for each decision variable in the objective function
 
     inequality_constraints_matrix = []
     inequality_constraints_vector = []
