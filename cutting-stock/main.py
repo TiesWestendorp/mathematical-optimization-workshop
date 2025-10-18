@@ -45,21 +45,25 @@ def cutting_stock(raw_length: int, final_to_demands: dict[int,int]) -> list[tupl
     #     ... and 8 more ...
     # ]
 
-    raise NotImplementedError
 
     # Each decision variable corresponds to a pattern, and indicates how many of that pattern is produced
 
-    objective = [] # TODO: Define the 'weights' for each decision variable in the objective function
+    objective = [waste_for_pattern(raw_length, pattern) for pattern in patterns] + [0.5 * final for final in finals]
 
     inequality_constraints_matrix = []
     inequality_constraints_vector = []
     for final,demand in final_to_demands.items():
        # Each `final` has a constraint: we must produce at least as many as the `demand` specifies
-       inequality_constraints_matrix.append([]) # TODO: Build up the constraints matrix row by row for each final
-       inequality_constraints_vector.append() # TODO: Build up the constraints vector row by row for each final
+       inequality_constraints_matrix.append([-pattern[final] for pattern in patterns] + [f == final for f in finals])
+       inequality_constraints_vector.append(-demand)
 
     # Optimize using `linprog`
-    result = linprog(objective, A_ub = inequality_constraints_matrix, b_ub = inequality_constraints_vector, integrality = 1)
+    result = linprog(
+        objective,
+        A_ub = inequality_constraints_matrix,
+        b_ub = inequality_constraints_vector,
+        integrality = [1 for _ in patterns] + [0 for _ in finals]
+    )
 
     return list(zip(patterns, map(int, result.x)))
 
