@@ -42,20 +42,18 @@ In total, there are 13 different patterns by which we can cut up the raw materia
 - et cetera.
 
 Such that at least producing the number of finals from the customer order with just these first four patterns can be formulated as:
-$$
-x_1 + 7x_4 \geq 211,\\
-2x_2 \geq 395,\\
-x_1 + x_2 \geq 610,\\
-x_1 + 2x_3 \geq 97.
-$$
+
+$$x_1 + 7x_4 \geq 211,$$
+$$2x_2 \geq 395,$$
+$$x_1 + x_2 \geq 610,$$
+$$x_1 + 2x_3 \geq 97.$$
 
 Rewritten in standard form, these become:
-$$
--x_1 - 7x_4 \leq -211,\\
--2x_2 \leq -395,\\
--x_1 - x_2 \leq -610,\\
--x_1 -2x_3 \leq -97.
-$$
+
+$$-x_1 - 7x_4 \leq -211,$$
+$$-2x_2 \leq -395,$$
+$$-x_1 - x_2 \leq -610,$$
+$$-x_1 -2x_3 \leq -97.$$
 
 In other words, for each final length $f$, we add a linear constraint 
 
